@@ -1,0 +1,36 @@
+NEGOTIATION FAIL API - CURRENT AGREED LOGIC
+
+1. Receive Case_Id.
+2. Find case by case_id.
+3. Check latest DRC expire_dtm.
+   - DRC NOT expired: NO ACTION. No case update and no user interaction insert.
+   - DRC expired: continue.
+4. Validate:
+   - case_current_phase == Negotiation
+   - case_current_status == RO Negotiation
+5. Read current_arrears_amount.
+6. Amount < 50,000:
+   - Process F2
+   - case_current_status = Pending LOD
+   - case_current_phase = Letter of Demand
+   - case_status reason = Failed DRC
+   - update lod_final_reminder
+7. Amount > 1,000,000:
+   - case_current_status = Pending FTL LOD
+   - case_current_phase = Letter of Demand
+   - case_status reason = Amount above 1,000,000 & DRC Failed
+8. Amount 50,000 to 1,000,000:
+   - Get case_details.rtom
+   - Match Rtom.rtom_name case-insensitively / uppercase normalized
+   - Read metro_region
+9. METRO:
+   - Do NOT change case_current_status
+   - Do NOT change case_current_phase
+   - Do NOT append case_status
+   - If Proceed_By exists, insert same interaction structure into:
+     User_Interaction_Log
+     User_Interaction_Progress_Log
+10. REGION and amount > 100,000:
+   - Same interaction-only flow as METRO
+11. REGION and amount <= 100,000:
+   - Process F2

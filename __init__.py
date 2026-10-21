@@ -1,0 +1,1 @@
+"""Negotiation fail API package."""

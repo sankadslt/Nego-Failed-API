@@ -1,0 +1,32 @@
+POST /negotiation-fail
+Content-Type: application/json
+
+Request:
+{
+  "Case_Id": 123456
+}
+
+Success response:
+{
+  "success": true,
+  "message": "Case moved to Letter of Demand",
+  "data": {
+    "Case_Id": 123456,
+    "case_current_status": "Pending LOD",
+    "case_current_phase": "Letter of Demand",
+    "reason": "Amount below 50000",
+    "interaction_created": false
+  }
+}
+
+Validation error:
+{
+  "success": false,
+  "message": "Negotiation fail condition not completed: invalid current status"
+}
+
+Not found error:
+{
+  "success": false,
+  "message": "Case not found"
+}
